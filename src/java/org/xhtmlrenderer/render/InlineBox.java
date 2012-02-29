@@ -18,6 +18,9 @@
  */
 package org.xhtmlrenderer.render;
 
+import java.text.*;
+import java.util.*;
+
 import org.w3c.dom.Element;
 import org.w3c.dom.Text;
 import org.xhtmlrenderer.css.constants.IdentValue;
@@ -203,8 +206,6 @@ public class InlineBox implements Styleable {
             LayoutContext c, int cbWidth, boolean trimLeadingSpace, boolean includeWS) {
         int spaceWidth = getSpaceWidth(c);
         
-        int last = 0;
-        int current = 0;
         int maxWidth = 0;
         int spaceCount = 0;
         
@@ -213,9 +214,51 @@ public class InlineBox implements Styleable {
         int lastWord = 0;
         
         String text = getText(trimLeadingSpace);
-        
-        while ( (current = text.indexOf(WhitespaceStripper.SPACE, last)) != -1) {
-            int length = getTextWidth(c, text.substring(last, current));
+        BreakIterator boundary = BreakIterator.getLineInstance(Locale.SIMPLIFIED_CHINESE);
+        boundary.setText(text);
+        int start = boundary.first();
+        for (int end = boundary.next(); end != BreakIterator.DONE; start = end, end = boundary
+                .next()) {
+            String textseg = text.substring(start, end);
+            int last = 0;
+            int current = 0;
+            while ( (current = textseg.indexOf(WhitespaceStripper.SPACE, last)) != -1) {
+                int length = getTextWidth(c, textseg.substring(last, current));
+                if (spaceCount > 0) {
+                    if (includeWS) {
+                        for (int i = 0; i < spaceCount; i++) {
+                            length += spaceWidth;
+                        }
+                    }
+                    spaceCount = 0;
+                }
+                if (length > 0) {
+                    if (! haveFirstWord) {
+                        firstWord = length;
+                    }
+                    lastWord = length;
+                }
+                
+                if (length > _minWidth) {
+                    _minWidth = length;
+                }
+                maxWidth += length;
+                if (! includeWS) {
+                    maxWidth += spaceWidth;
+                }
+                
+                last = current;
+                for (int i = current; i < textseg.length(); i++) {
+                    if (textseg.charAt(i) == ' ') {
+                        spaceCount++;
+                        last++;
+                    } else {
+                        break;
+                    }
+                }
+            }
+            
+            int length = getTextWidth(c, textseg.substring(last));
             if (spaceCount > 0) {
                 if (includeWS) {
                     for (int i = 0; i < spaceCount; i++) {
@@ -229,47 +272,12 @@ public class InlineBox implements Styleable {
                     firstWord = length;
                 }
                 lastWord = length;
-            }
-            
+            }        
             if (length > _minWidth) {
                 _minWidth = length;
             }
             maxWidth += length;
-            if (! includeWS) {
-                maxWidth += spaceWidth;
-            }
-            
-            last = current;
-            for (int i = current; i < text.length(); i++) {
-                if (text.charAt(i) == ' ') {
-                    spaceCount++;
-                    last++;
-                } else {
-                    break;
-                }
-            }
         }
-        
-        int length = getTextWidth(c, text.substring(last));
-        if (spaceCount > 0) {
-            if (includeWS) {
-                for (int i = 0; i < spaceCount; i++) {
-                    length += spaceWidth;
-                }
-            }
-            spaceCount = 0;
-        }
-        if (length > 0) {
-            if (! haveFirstWord) {
-                firstWord = length;
-            }
-            lastWord = length;
-        }        
-        if (length > _minWidth) {
-            _minWidth = length;
-        }
-        maxWidth += length;
-        
         if (isStartsHere()) {
             int leftMBP = getStyle().getMarginBorderPadding(c, cbWidth, CalculatedStyle.LEFT);
             if (firstWord + leftMBP > _minWidth) {
