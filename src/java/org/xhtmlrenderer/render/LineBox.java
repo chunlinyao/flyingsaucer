@@ -227,7 +227,11 @@ public class LineBox extends Box implements InlinePaintable {
                     if (counts.getSpaceCount() > 0) {
                         info.setSpaceAdjust((float)toAdd * JUSTIFY_SPACE_SHARE / counts.getSpaceCount());
                     } else {
-                        info.setSpaceAdjust(0.0f);
+                        if (counts.getNonSpaceCount() > 1) {
+                            info.setNonSpaceAdjust((float)toAdd / (counts.getNonSpaceCount()-1));
+                        } else {
+                            info.setSpaceAdjust(0.0f);
+                        }
                     }
                 }
                 
