@@ -928,6 +928,20 @@ public final class CSSName implements Comparable {
 
     /**
      * Unique CSSName instance for CSS2 property.
+     * TODO: UA dependent
+     */
+    public final static CSSName TEXT_ALIGN_LAST =
+            addProperty(
+                    "text-align-last",
+                    PRIMITIVE,
+                    "left",
+                    INHERITS,
+                    new PrimitivePropertyBuilders.TextAlign()
+            );
+
+
+    /**
+     * Unique CSSName instance for CSS2 property.
      */
     public final static CSSName TEXT_DECORATION =
             addProperty(

@@ -201,7 +201,8 @@ public class LineBox extends Box implements InlinePaintable {
     }
     
     public void justify() {
-        if (! isLastLineWithContent()) {
+        IdentValue align_last = getParent().getStyle().getIdent(CSSName.TEXT_ALIGN_LAST);
+        if (! isLastLineWithContent() || align_last == IdentValue.JUSTIFY) {
             int leftFloatDistance = getFloatDistances().getLeftFloatDistance();
             int rightFloatDistance = getFloatDistances().getRightFloatDistance();
             
