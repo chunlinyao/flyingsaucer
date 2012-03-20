@@ -309,12 +309,14 @@ public class BorderPainter {
             final BorderPropertySet bcolor, final int sides, int currentSide,
             boolean bevel) {
         Polygon poly = getBorderSidePolygon(bounds, border, sides, currentSide, bevel);
-
+        Stroke old_stroke = outputDevice.getStroke();
+        
         if (currentSide == BorderPainter.TOP) {
             outputDevice.setColor(bcolor.topColor());
 
             // draw a 1px border with a line instead of a polygon
-            if ((int) border.top() == 1) {
+            if ((int) border.top() < 50) {
+                outputDevice.setStroke(new BasicStroke((int) border.top(), BasicStroke.CAP_SQUARE, BasicStroke.JOIN_ROUND));
                 outputDevice.drawBorderLine(bounds, BorderPainter.TOP, 
                         (int)border.top(), true);
             } else {
@@ -323,7 +325,8 @@ public class BorderPainter {
             }
         } else if (currentSide == BorderPainter.BOTTOM) {
             outputDevice.setColor(bcolor.bottomColor());
-            if ((int) border.bottom() == 1) {
+            if ((int) border.bottom() < 50) {
+                outputDevice.setStroke(new BasicStroke((int) border.bottom(), BasicStroke.CAP_SQUARE, BasicStroke.JOIN_ROUND));
                 outputDevice.drawBorderLine(bounds, BorderPainter.BOTTOM, 
                         (int)border.bottom(), true);
             } else {
@@ -331,7 +334,8 @@ public class BorderPainter {
             }
         } else if (currentSide == BorderPainter.RIGHT) {
             outputDevice.setColor(bcolor.rightColor());
-            if ((int) border.right() == 1) {
+            if ((int) border.right() < 50) {
+                outputDevice.setStroke(new BasicStroke((int) border.right(), BasicStroke.CAP_SQUARE, BasicStroke.JOIN_ROUND));
                 outputDevice.drawBorderLine(bounds, BorderPainter.RIGHT, 
                         (int)border.right(), true);
             } else {
@@ -339,13 +343,16 @@ public class BorderPainter {
             }
         } else if (currentSide == BorderPainter.LEFT) {
             outputDevice.setColor(bcolor.leftColor());
-            if ((int) border.left() == 1) {
+            if ((int) border.left() < 50) {
+                outputDevice.setStroke(new BasicStroke((int) border.left(), BasicStroke.CAP_SQUARE, BasicStroke.JOIN_ROUND));
                 outputDevice.drawBorderLine(bounds, BorderPainter.LEFT, 
                         (int)border.left(), true);
             } else {
                 outputDevice.fill(poly);
             }
         }
+        
+        outputDevice.setStroke(old_stroke);
     }
     
     private static class DoubleBorderInfo {
