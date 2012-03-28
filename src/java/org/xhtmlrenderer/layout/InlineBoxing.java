@@ -845,7 +845,8 @@ public class InlineBoxing {
 
         result.setSubstring(lbContext.getStart(), lbContext.getEnd());
         result.setWidth(lbContext.getWidth());
-
+        result.setKernings(lbContext.getKernings());
+        result.setFirstCharOffset(lbContext.getFirstCharOffset());
         return result;
     }
 

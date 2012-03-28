@@ -26,6 +26,7 @@ import java.util.*;
 import org.xhtmlrenderer.css.constants.IdentValue;
 import org.xhtmlrenderer.css.style.CalculatedStyle;
 import org.xhtmlrenderer.render.FSFont;
+import org.xhtmlrenderer.util.*;
 
 /**
  * A utility class that scans the text of a single inline box, looking for the 
@@ -75,8 +76,13 @@ public class Breaker {
         // ====== handle nowrap
         if (whitespace == IdentValue.NOWRAP) {
             context.setEnd(context.getLast());
-            context.setWidth(c.getTextRenderer().getWidth(c.getFontContext(), font,
-                    context.getCalculatedSubstring()));
+            int width = c.getTextRenderer().getWidth(c.getFontContext(), font,
+                    context.getCalculatedSubstring());
+            final float[] kernings = c.getTextRenderer().getKernings(c.getFontContext(), font,
+                    context.getCalculatedSubstring());
+            context.setKernings(kernings);
+            width += ArrayUtil.sum(kernings);
+            context.setWidth(width);
             return;
         }
 
@@ -86,14 +92,24 @@ public class Breaker {
             int n = context.getStartSubstring().indexOf(WhitespaceStripper.EOL);
             if (n > -1) {
                 context.setEnd(context.getStart() + n + 1);
-                context.setWidth(c.getTextRenderer().getWidth(c.getFontContext(), font,
-                        context.getCalculatedSubstring()));
+                int width = c.getTextRenderer().getWidth(c.getFontContext(), font,
+                        context.getCalculatedSubstring());
+                final float[] kernings = c.getTextRenderer().getKernings(c.getFontContext(), font,
+                        context.getCalculatedSubstring());
+                context.setKernings(kernings);
+                width += ArrayUtil.sum(kernings);
+                context.setWidth(width);
                 context.setNeedsNewLine(true);
                 context.setEndsOnNL(true);
             } else if (whitespace == IdentValue.PRE) {
                 context.setEnd(context.getLast());
-                context.setWidth(c.getTextRenderer().getWidth(c.getFontContext(), font,
-                        context.getCalculatedSubstring()));
+                int width = c.getTextRenderer().getWidth(c.getFontContext(), font,
+                        context.getCalculatedSubstring());
+                final float[] kernings = c.getTextRenderer().getKernings(c.getFontContext(), font,
+                        context.getCalculatedSubstring());
+                context.setKernings(kernings);
+                width += ArrayUtil.sum(kernings);
+                context.setWidth(width);
             }
         }
 

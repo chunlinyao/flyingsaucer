@@ -120,4 +120,12 @@ public class SWTTextRenderer implements TextRenderer {
         throw new UnsupportedOperationException();
     }
 
+    /* (non-Javadoc)
+     * @see org.xhtmlrenderer.extend.TextRenderer#getKernings(org.xhtmlrenderer.extend.FontContext, org.xhtmlrenderer.render.FSFont, java.lang.String)
+     */
+    public float[] getKernings(FontContext fontContext, FSFont fsFont, String substring) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
 }

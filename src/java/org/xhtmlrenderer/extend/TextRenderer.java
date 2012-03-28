@@ -67,5 +67,13 @@ public interface TextRenderer {
      * @param level no-op
      */
     public void setSmoothingLevel(int level);
+
+    /**
+     * @param fontContext
+     * @param fsFont
+     * @param substring
+     * @return
+     */
+    public float[] getKernings(FontContext fontContext, FSFont fsFont, String substring);
 }
 

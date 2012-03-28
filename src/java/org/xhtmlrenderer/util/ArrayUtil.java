@@ -30,4 +30,16 @@ public class ArrayUtil {
     public static int[] cloneOrEmpty(int[] source) {
         return source == null ? Constants.EMPTY_INT_ARR : (int[]) source.clone();
     }
+    
+    public static float sum(float[] source) {
+        if (source != null) {
+            float sum = 0;
+            for (int i = 0; i < source.length; i++) {
+                sum += source[i];
+            }
+            return sum;
+        } else {
+            return 0;
+        }
+    }
 }

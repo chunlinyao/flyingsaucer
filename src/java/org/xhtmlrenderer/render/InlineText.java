@@ -27,7 +27,7 @@ import org.xhtmlrenderer.extend.FSGlyphVector;
 import org.xhtmlrenderer.layout.FunctionData;
 import org.xhtmlrenderer.layout.LayoutContext;
 import org.xhtmlrenderer.layout.WhitespaceStripper;
-import org.xhtmlrenderer.util.Uu;
+import org.xhtmlrenderer.util.*;
 
 /**
  * A lightweight object which contains a chunk of text from an inline element.  
@@ -106,11 +106,16 @@ public class InlineText {
     public void trimTrailingSpace(LayoutContext c) {
         if (! isEmpty() && _masterText.charAt(_end-1) == ' ') {
             _end--;
-            final int fontWidth = c.getTextRenderer().getWidth(c.getFontContext(), 
+            int width = c.getTextRenderer().getWidth(c.getFontContext(), 
                     getParent().getStyle().getFSFont(c),
                     getSubstring());
             //TODO conside kernings
-            setWidth(fontWidth);
+            width += firstCharOffset;
+            kernings = c.getTextRenderer().getKernings(c.getFontContext(), 
+                    getParent().getStyle().getFSFont(c),
+                    getSubstring());
+            width += ArrayUtil.sum(kernings);
+            setWidth(width);
             setTrimmedTrailingSpace(true);
         } 
     }

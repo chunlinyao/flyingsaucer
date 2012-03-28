@@ -36,7 +36,36 @@ public class LineBreakContext {
     private int _width;
     private boolean _endsOnNL;
     private Text _textNode;
+    private float[] kernings;
+    private float firstCharOffset;
     
+    /**
+     * @return the kernings
+     */
+    public float[] getKernings() {
+        return kernings;
+    }
+
+    /**
+     * @param kernings the kernings to set
+     */
+    public void setKernings(float[] kernings) {
+        this.kernings = kernings;
+    }
+
+    /**
+     * @return the firstCharOffset
+     */
+    public float getFirstCharOffset() {
+        return firstCharOffset;
+    }
+
+    /**
+     * @param firstCharOffset the firstCharOffset to set
+     */
+    public void setFirstCharOffset(float firstCharOffset) {
+        this.firstCharOffset = firstCharOffset;
+    }
     public int getLast() {
         return _master.length();
     }
