@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<project name="Flying Saucer Build File" default="sync" basedir=".">
+	<property name="src.dir" location="src" />
+	<property name="dest.dir" location="build" />
+	<property name="src.java.dir" location="${src.dir}/java" />
+	<property name="dest.java.dir" location="${dest.dir}/classes" />
+	<property name="src.resources.css.dir" location="${src.dir}/css" />
+	<property name="dest.resources.css.dir" location="${dest.java.dir}/resources/css" />
+	<property name="src.resources.conf.dir" location="${src.dir}/conf" />
+	<property name="dest.resources.conf.dir" location="${dest.java.dir}/resources/conf" />
+	<property name="src.resources.schema.dir" location="${src.dir}/schema" />
+	<property name="dest.resources.schema.dir" location="${dest.java.dir}/resources/schema" />
+
+	<target name="init">
+		<mkdir dir="${dest.dir}" />
+		<mkdir dir="${dest.java.dir}" />
+		<mkdir dir="${dest.resources.css.dir}" />
+		<mkdir dir="${dest.resources.conf.dir}" />
+		<mkdir dir="${dest.resources.schema.dir}" />
+	</target>
+	<target name="sync" description="Copies core resource files (css/dtds) to build directory" depends="init">
+
+		<copy todir="${dest.resources.css.dir}">
+			<fileset dir="${src.resources.css.dir}">
+				<include name="*.css" />
+			</fileset>
+		</copy>
+		<copy todir="${dest.resources.conf.dir}" file="${src.resources.conf.dir}/xhtmlrenderer.conf" />
+		<copy todir="${dest.resources.schema.dir}">
+			<fileset dir="${src.resources.schema.dir}">
+				<include name="**/*.*" />
+			</fileset>
+		</copy>
+	</target>
+</project>
