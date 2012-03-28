@@ -486,7 +486,8 @@ public class ITextOutputDevice extends AbstractOutputDevice implements OutputDev
         return result;
     }
 
-    public void drawString(String s, float x, float y, JustificationInfo info) {
+    public void drawString(String s, float x, float y, JustificationInfo info, float[] kernings) {
+        //TODO handle kernings
         if(Configuration.isTrue("xr.renderer.replace-missing-characters", false)) {
             s = replaceMissingCharacters(s);
         }
@@ -527,10 +528,10 @@ public class ITextOutputDevice extends AbstractOutputDevice implements OutputDev
 	    }
 	}
         cb.setTextMatrix((float)mx[0], b, c, (float)mx[3], (float)mx[4], (float)mx[5]);
-        if (info == null) {
+        if (info == null || kernings != null) {
             cb.showText(s);
         } else {
-            PdfTextArray array = makeJustificationArray(s, info);
+            PdfTextArray array = makeJustificationArray(s, info, kernings);
             cb.showText(array);
         }
 	if (resetMode) {
@@ -561,18 +562,23 @@ public class ITextOutputDevice extends AbstractOutputDevice implements OutputDev
         return String.valueOf(charArr);
     }
 
-    private PdfTextArray makeJustificationArray(String s, JustificationInfo info) {
+    private PdfTextArray makeJustificationArray(String s, JustificationInfo info, float[] kernings) {
         PdfTextArray array = new PdfTextArray();
         int len = s.length();
         for (int i = 0; i < len; i++) {
             char c = s.charAt(i);
             array.add(Character.toString(c));
             if (i != len - 1) {
-                float offset;
-                if (c == ' ' || c == '\u00a0' || c == '\u3000') {
-                    offset = info.getSpaceAdjust();
-                } else {
-                    offset = info.getNonSpaceAdjust();
+                float offset = 0f;
+                if(info != null){
+                    if (c == ' ' || c == '\u00a0' || c == '\u3000') {
+                        offset = info.getSpaceAdjust();
+                    } else {
+                        offset = info.getNonSpaceAdjust();
+                    }
+                }
+                if(kernings != null) {
+                    offset += kernings[i];
                 }
                 array.add((-offset / _dotsPerPoint) * 1000 /
                             (_font.getSize2D() / _dotsPerPoint));

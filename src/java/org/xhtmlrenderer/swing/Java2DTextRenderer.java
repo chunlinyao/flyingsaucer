@@ -82,25 +82,12 @@ public class Java2DTextRenderer implements TextRenderer {
     }
 
     /** {@inheritDoc} */
-    public void drawString(OutputDevice outputDevice, String string, float x, float y ) {
-        Object aaHint = null;
-        Object fracHint = null;
-        Graphics2D graphics = ((Java2DOutputDevice)outputDevice).getGraphics();
-        if ( graphics.getFont().getSize() > threshold ) {
-            aaHint = graphics.getRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING);
-            graphics.setRenderingHint( RenderingHints.KEY_TEXT_ANTIALIASING, antiAliasRenderingHint );
-        }
-        fracHint = graphics.getRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS);
-        graphics.setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS, fractionalFontMetricsHint);
-        graphics.drawString( string, (int)x, (int)y );
-        if ( graphics.getFont().getSize() > threshold ) {
-            graphics.setRenderingHint( RenderingHints.KEY_TEXT_ANTIALIASING, aaHint );
-        }
-        graphics.setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS, fracHint);
+    public void drawString(OutputDevice outputDevice, String string, float x, float y, float[] kernings ) {
+        drawString(outputDevice, string, x, y, null, kernings);
     }
     
     public void drawString(
-            OutputDevice outputDevice, String string, float x, float y, JustificationInfo info) {
+            OutputDevice outputDevice, String string, float x, float y, JustificationInfo info, float[] kernings) {
         Object aaHint = null;
         Object fracHint = null;
         Graphics2D graphics = ((Java2DOutputDevice)outputDevice).getGraphics();
@@ -114,7 +101,7 @@ public class Java2DTextRenderer implements TextRenderer {
         GlyphVector vector = graphics.getFont().createGlyphVector(
                 graphics.getFontRenderContext(), string);
         
-        adjustGlyphPositions(string, info, vector);
+        adjustGlyphPositions(string, info, kernings, vector);
         
         graphics.drawGlyphVector(vector, x, y);
         
@@ -125,7 +112,7 @@ public class Java2DTextRenderer implements TextRenderer {
     }
 
     private void adjustGlyphPositions(
-            String string, JustificationInfo info, GlyphVector vector) {
+            String string, JustificationInfo info, float[] kernings, GlyphVector vector) {
         float adjust = 0.0f;
         for (int i = 0; i < string.length(); i++) {
             char c = string.charAt(i);
@@ -134,10 +121,15 @@ public class Java2DTextRenderer implements TextRenderer {
                 vector.setGlyphPosition(
                         i, new Point2D.Double(point.getX() + adjust, point.getY()));
             }
-            if (c == ' ' || c == '\u00a0' || c == '\u3000') {
-                adjust += info.getSpaceAdjust();
-            } else {
-                adjust += info.getNonSpaceAdjust();
+            if (info != null) {
+                if (c == ' ' || c == '\u00a0' || c == '\u3000') {
+                    adjust += info.getSpaceAdjust();
+                } else {
+                    adjust += info.getNonSpaceAdjust();
+                }
+            }
+            if (kernings != null) {
+                adjust += kernings[i];
             }
         }
     }

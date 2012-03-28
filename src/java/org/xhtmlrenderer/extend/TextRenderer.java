@@ -29,9 +29,9 @@ import org.xhtmlrenderer.render.JustificationInfo;
 public interface TextRenderer {
     public void setup(FontContext context);
 
-    public void drawString(OutputDevice outputDevice, String string, float x, float y);
+    public void drawString(OutputDevice outputDevice, String string, float x, float y, float[] kernings);
     public void drawString(
-            OutputDevice outputDevice, String string, float x, float y, JustificationInfo info);
+            OutputDevice outputDevice, String string, float x, float y, JustificationInfo info, float[] kernings);
     
     public void drawGlyphVector(OutputDevice outputDevice, FSGlyphVector vector, float x, float y);
     

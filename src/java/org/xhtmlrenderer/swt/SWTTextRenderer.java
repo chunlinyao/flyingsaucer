@@ -52,7 +52,8 @@ public class SWTTextRenderer implements TextRenderer {
     }
 
     public void drawString(OutputDevice outputDevice, String string, float x,
-            float y) {
+            float y, float[] kernings) {
+        //TODO handle kernings
         GC gc = ((SWTOutputDevice) outputDevice).getGC();
         FontMetrics metrics = gc.getFontMetrics();
         y -= (metrics.getAscent() + metrics.getLeading());
@@ -99,9 +100,10 @@ public class SWTTextRenderer implements TextRenderer {
     }
 
     public void drawString(OutputDevice outputDevice, String string, float x, float y,
-            JustificationInfo info) {
+            JustificationInfo info, float[] kernings) {
         // TODO handle justification
-        drawString(outputDevice, string, x, y);
+        // TODO handle kernings
+        drawString(outputDevice, string, x, y, kernings);
     }
 
     public Rectangle getGlyphBounds(OutputDevice outputDevice, FSFont font,

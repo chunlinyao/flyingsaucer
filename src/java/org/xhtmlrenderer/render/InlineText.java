@@ -57,12 +57,60 @@ public class InlineText {
     private boolean _trimmedLeadingSpace;
     private boolean _trimmedTrailingSpace;
     private Text _textNode;
+    private float[] kernings;
+    private float firstCharOffset;
+    private float lastCharAdjust;
+    
+    /**
+     * @return the kernings
+     */
+    public float[] getKernings() {
+        return kernings;
+    }
+
+    /**
+     * @param kernings the kernings to set
+     */
+    public void setKernings(float[] kernings) {
+        this.kernings = kernings;
+    }
+
+    /**
+     * @return the firstCharOffset
+     */
+    public float getFirstCharOffset() {
+        return firstCharOffset;
+    }
+
+    /**
+     * @param firstCharOffset the firstCharOffset to set
+     */
+    public void setFirstCharOffset(float firstCharOffset) {
+        this.firstCharOffset = firstCharOffset;
+    }
+
+    /**
+     * @return the lastCharAdjust
+     */
+    public float getLastCharAdjust() {
+        return lastCharAdjust;
+    }
+
+    /**
+     * @param lastCharAdjust the lastCharAdjust to set
+     */
+    public void setLastCharAdjust(float lastCharAdjust) {
+        this.lastCharAdjust = lastCharAdjust;
+    }
+
     public void trimTrailingSpace(LayoutContext c) {
         if (! isEmpty() && _masterText.charAt(_end-1) == ' ') {
             _end--;
-            setWidth(c.getTextRenderer().getWidth(c.getFontContext(), 
+            final int fontWidth = c.getTextRenderer().getWidth(c.getFontContext(), 
                     getParent().getStyle().getFSFont(c),
-                    getSubstring()));
+                    getSubstring());
+            //TODO conside kernings
+            setWidth(fontWidth);
             setTrimmedTrailingSpace(true);
         } 
     }

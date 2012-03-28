@@ -38,13 +38,13 @@ public class ITextTextRenderer implements TextRenderer {
     public void setup(FontContext context) {
     }
 
-    public void drawString(OutputDevice outputDevice, String string, float x, float y) {
-        ((ITextOutputDevice)outputDevice).drawString(string, x, y, null);
+    public void drawString(OutputDevice outputDevice, String string, float x, float y, float[] kernings) {
+        ((ITextOutputDevice)outputDevice).drawString(string, x, y, null, kernings);
     }
     
     public void drawString(
-            OutputDevice outputDevice, String string, float x, float y, JustificationInfo info) {
-        ((ITextOutputDevice)outputDevice).drawString(string, x, y, info);
+            OutputDevice outputDevice, String string, float x, float y, JustificationInfo info, float[] kernings) {
+        ((ITextOutputDevice)outputDevice).drawString(string, x, y, info, kernings);
     }
 
     public FSFontMetrics getFSFontMetrics(FontContext context, FSFont font, String string) {

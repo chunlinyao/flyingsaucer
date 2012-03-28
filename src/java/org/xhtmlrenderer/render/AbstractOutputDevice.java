@@ -55,30 +55,30 @@ public abstract class AbstractOutputDevice implements OutputDevice {
     public void drawText(RenderingContext c, InlineText inlineText) {
         InlineLayoutBox iB = inlineText.getParent();
         String text = inlineText.getSubstring();
-
         if (text != null && text.length() > 0) {
             setColor(iB.getStyle().getColor());
             setFont(iB.getStyle().getFSFont(c));
             setFontSpecification(iB.getStyle().getFontSpecification());
+            final float[] kernings = inlineText.getKernings();
             if (inlineText.getParent().getStyle().isTextJustify()) {
                 JustificationInfo info = inlineText.getParent().getLineBox().getJustificationInfo();
                 if (info != null) {
                     c.getTextRenderer().drawString(
                             c.getOutputDevice(),
                             text,
-                            iB.getAbsX() + inlineText.getX(), iB.getAbsY() + iB.getBaseline(),
-                            info);
+                            iB.getAbsX() + inlineText.getX() + inlineText.getFirstCharOffset(), iB.getAbsY() + iB.getBaseline(),
+                            info, kernings);
                 } else {
                     c.getTextRenderer().drawString(
                             c.getOutputDevice(),
                             text,
-                            iB.getAbsX() + inlineText.getX(), iB.getAbsY() + iB.getBaseline());
+                            iB.getAbsX() + inlineText.getX() + inlineText.getFirstCharOffset(), iB.getAbsY() + iB.getBaseline(), kernings);
                 }
             } else {
                 c.getTextRenderer().drawString(
                         c.getOutputDevice(),
                         text,
-                        iB.getAbsX() + inlineText.getX(), iB.getAbsY() + iB.getBaseline());
+                        iB.getAbsX() + inlineText.getX() + inlineText.getFirstCharOffset(), iB.getAbsY() + iB.getBaseline(), kernings);
             }
         }
 
