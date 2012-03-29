@@ -20,6 +20,7 @@
 package org.xhtmlrenderer.pdf;
 
 import java.awt.Rectangle;
+import java.util.*;
 
 import org.xhtmlrenderer.extend.FSGlyphVector;
 import org.xhtmlrenderer.extend.FontContext;
@@ -111,13 +112,50 @@ public class ITextTextRenderer implements TextRenderer {
         throw new UnsupportedOperationException();
     }
 
-    /* (non-Javadoc)
-     * @see org.xhtmlrenderer.extend.TextRenderer#getKernings(org.xhtmlrenderer.extend.FontContext, org.xhtmlrenderer.render.FSFont, java.lang.String)
+   
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.xhtmlrenderer.extend.TextRenderer#getKernings(org.xhtmlrenderer.extend
+     * .FontContext, org.xhtmlrenderer.render.FSFont, java.lang.String)
      */
     public float[] getKernings(FontContext fontContext, FSFont fsFont, String substring) {
-        // TODO Auto-generated method stub
-        return null;
+        float[] kernings = new float[substring.length() + 1];
+        Arrays.fill(kernings, 0f);
+        for (int i = 0; i < substring.length() - 1; i++) {
+            if (substring.charAt(i) == '：') {
+                if (substring.charAt(i+1) == '“') {
+                    kernings[i] = -60f;
+                }
+            }
+            if (substring.charAt(i) == '。') {
+                if (substring.charAt(i+1) == '”') {
+                    kernings[i] = -60f;
+                }
+            }
+        }
+        char lastchar = substring.charAt(substring.length() - 1);
+        if ("”）』】》’".indexOf(lastchar) >= 0) {
+            kernings[substring.length() - 1] = -60f;
+        }
+        return kernings;
     }
-    
-    
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.xhtmlrenderer.extend.TextRenderer#getFirstCharOffset(org.xhtmlrenderer
+     * .extend.FontContext, org.xhtmlrenderer.render.FSFont, java.lang.String)
+     */
+    public float getFirstCharOffset(FontContext fontContext, FSFont fsFont, String substring) {
+        int firstChar = substring.codePointAt(0);
+        if ("“（『【‘《".indexOf(firstChar) < 0) {
+            return 0;
+        } else {
+            return -100f;
+        }
+    }
+
 }

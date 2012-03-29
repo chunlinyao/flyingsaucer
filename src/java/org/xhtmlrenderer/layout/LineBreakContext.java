@@ -74,6 +74,8 @@ public class LineBreakContext {
         _width = 0;
         _unbreakable = false;
         _needsNewLine = false;
+        kernings = null;
+        firstCharOffset = 0;
     }
     
     public int getEnd() {

@@ -75,5 +75,13 @@ public interface TextRenderer {
      * @return
      */
     public float[] getKernings(FontContext fontContext, FSFont fsFont, String substring);
+    
+    /**
+     * @param fontContext
+     * @param fsFont
+     * @param substring
+     * @return
+     */
+    public float getFirstCharOffset(FontContext fontContext, FSFont fsFont, String substring);
 }
 

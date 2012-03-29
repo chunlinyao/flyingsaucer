@@ -528,7 +528,7 @@ public class ITextOutputDevice extends AbstractOutputDevice implements OutputDev
 	    }
 	}
         cb.setTextMatrix((float)mx[0], b, c, (float)mx[3], (float)mx[4], (float)mx[5]);
-        if (info == null || kernings != null) {
+        if (info == null && kernings == null) {
             cb.showText(s);
         } else {
             PdfTextArray array = makeJustificationArray(s, info, kernings);

@@ -128,4 +128,12 @@ public class SWTTextRenderer implements TextRenderer {
         return null;
     }
 
+    /* (non-Javadoc)
+     * @see org.xhtmlrenderer.extend.TextRenderer#getFirstCharOffset(org.xhtmlrenderer.extend.FontContext, org.xhtmlrenderer.render.FSFont, java.lang.String)
+     */
+    public float getFirstCharOffset(FontContext fontContext, FSFont fsFont, String substring) {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+
 }

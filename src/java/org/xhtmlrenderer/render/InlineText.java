@@ -109,7 +109,6 @@ public class InlineText {
             int width = c.getTextRenderer().getWidth(c.getFontContext(), 
                     getParent().getStyle().getFSFont(c),
                     getSubstring());
-            //TODO conside kernings
             width += firstCharOffset;
             kernings = c.getTextRenderer().getKernings(c.getFontContext(), 
                     getParent().getStyle().getFSFont(c),

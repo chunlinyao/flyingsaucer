@@ -41,7 +41,8 @@ public class Breaker {
         context.setEnd(getFirstLetterEnd(context.getMaster(), context.getStart()));
         context.setWidth(c.getTextRenderer().getWidth(c.getFontContext(), font,
                 context.getCalculatedSubstring()));
-
+        context.setKernings(null);
+        context.setFirstCharOffset(0f);
         if (context.getWidth() > avail) {
             context.setNeedsNewLine(true);
             context.setUnbreakable(true);
@@ -81,6 +82,9 @@ public class Breaker {
             final float[] kernings = c.getTextRenderer().getKernings(c.getFontContext(), font,
                     context.getCalculatedSubstring());
             context.setKernings(kernings);
+            context.setFirstCharOffset(c.getTextRenderer().getFirstCharOffset(c.getFontContext(), font,
+                    context.getCalculatedSubstring()));
+            width += context.getFirstCharOffset();
             width += ArrayUtil.sum(kernings);
             context.setWidth(width);
             return;
@@ -97,6 +101,9 @@ public class Breaker {
                 final float[] kernings = c.getTextRenderer().getKernings(c.getFontContext(), font,
                         context.getCalculatedSubstring());
                 context.setKernings(kernings);
+                context.setFirstCharOffset(c.getTextRenderer().getFirstCharOffset(c.getFontContext(), font,
+                        context.getCalculatedSubstring()));
+                width += context.getFirstCharOffset();
                 width += ArrayUtil.sum(kernings);
                 context.setWidth(width);
                 context.setNeedsNewLine(true);
@@ -108,6 +115,9 @@ public class Breaker {
                 final float[] kernings = c.getTextRenderer().getKernings(c.getFontContext(), font,
                         context.getCalculatedSubstring());
                 context.setKernings(kernings);
+                context.setFirstCharOffset(c.getTextRenderer().getFirstCharOffset(c.getFontContext(), font,
+                        context.getCalculatedSubstring()));
+                width += context.getFirstCharOffset();
                 width += ArrayUtil.sum(kernings);
                 context.setWidth(width);
             }
@@ -129,16 +139,23 @@ public class Breaker {
         String currentString = context.getStartSubstring();
         BreakIterator boundary = BreakIterator.getLineInstance(Locale.SIMPLIFIED_CHINESE);
         boundary.setText(currentString);
-        int left = boundary.first();
+        int first;
+        int left = first = boundary.first();
         int right = tryToBreakAnywhere ? 1 : getNextBreak(boundary, left);
         int lastWrap = 0;
         int graphicsLength = 0;
         int lastGraphicsLength = 0;
-
+        float[] kernings = null;
+        float firstCharOffset = c.getTextRenderer().getFirstCharOffset(c.getFontContext(), font,
+                currentString);
         while (right > 0 && graphicsLength <= avail) {
             lastGraphicsLength = graphicsLength;
-            graphicsLength += c.getTextRenderer().getWidth(c.getFontContext(), font,
-                    currentString.substring(left, right));
+            graphicsLength = c.getTextRenderer().getWidth(c.getFontContext(), font,
+                    currentString.substring(first, right));
+            kernings = c.getTextRenderer().getKernings(c.getFontContext(), font,
+                    currentString.substring(first, right));
+            graphicsLength += firstCharOffset;
+            graphicsLength += ArrayUtil.sum(kernings);
             lastWrap = left;
             left = right;
             if (tryToBreakAnywhere) {
@@ -152,13 +169,19 @@ public class Breaker {
             //try for the last bit too!
             lastWrap = left;
             lastGraphicsLength = graphicsLength;
-            graphicsLength += c.getTextRenderer().getWidth(c.getFontContext(), font,
-                    currentString.substring(left));
+            graphicsLength = c.getTextRenderer().getWidth(c.getFontContext(), font,
+                    currentString.substring(first));
+            kernings = c.getTextRenderer().getKernings(c.getFontContext(), font,
+                    currentString.substring(first));
+            graphicsLength += firstCharOffset;
+            graphicsLength += ArrayUtil.sum(kernings);
         }
 
         if (graphicsLength <= avail) {
             context.setWidth(graphicsLength);
             context.setEnd(context.getMaster().length());
+            context.setKernings(kernings);
+            context.setFirstCharOffset(firstCharOffset);
             //It fit!
             return;
         }
@@ -174,6 +197,8 @@ public class Breaker {
         if (lastWrap != 0) {//found a place to wrap
             context.setEnd(context.getStart() + lastWrap);
             context.setWidth(lastGraphicsLength);
+            context.setKernings(kernings);
+            context.setFirstCharOffset(firstCharOffset);
         } else {//unbreakable string
             if (left == 0) {
                 left = currentString.length();
@@ -183,10 +208,19 @@ public class Breaker {
             context.setUnbreakable(true);
 
             if (left == currentString.length()) {
-                context.setWidth(c.getTextRenderer().getWidth(c.getFontContext(), font,
-                        context.getCalculatedSubstring()));
+                int width = c.getTextRenderer().getWidth(c.getFontContext(), font,
+                        context.getCalculatedSubstring());
+                kernings = c.getTextRenderer().getKernings(c.getFontContext(), font,
+                        context.getCalculatedSubstring());
+                width += firstCharOffset;
+                width += ArrayUtil.sum(kernings);
+                context.setWidth(width);
+                context.setKernings(kernings);
+                context.setFirstCharOffset(firstCharOffset);
             } else {
                 context.setWidth(graphicsLength);
+                context.setKernings(kernings);
+                context.setFirstCharOffset(firstCharOffset);
             }
         }
         return;
