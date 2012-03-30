@@ -19,24 +19,15 @@
  */
 package org.xhtmlrenderer.swing;
 
-import java.awt.Font;
-import java.awt.Graphics2D;
-import java.awt.Rectangle;
-import java.awt.RenderingHints;
-import java.awt.Toolkit;
-import java.awt.font.GlyphVector;
-import java.awt.geom.Point2D;
-import java.util.Map;
+import java.awt.*;
+import java.awt.font.*;
+import java.awt.geom.*;
+import java.util.*;
 
-import org.xhtmlrenderer.extend.FSGlyphVector;
-import org.xhtmlrenderer.extend.FontContext;
-import org.xhtmlrenderer.extend.OutputDevice;
-import org.xhtmlrenderer.extend.TextRenderer;
-import org.xhtmlrenderer.render.FSFont;
-import org.xhtmlrenderer.render.FSFontMetrics;
-import org.xhtmlrenderer.render.JustificationInfo;
-import org.xhtmlrenderer.render.LineMetricsAdapter;
-import org.xhtmlrenderer.util.Configuration;
+import org.xhtmlrenderer.css.constants.*;
+import org.xhtmlrenderer.extend.*;
+import org.xhtmlrenderer.render.*;
+import org.xhtmlrenderer.util.*;
 
 
 /**
@@ -334,7 +325,7 @@ public class Java2DTextRenderer implements TextRenderer {
     /* (non-Javadoc)
      * @see org.xhtmlrenderer.extend.TextRenderer#getKernings(org.xhtmlrenderer.extend.FontContext, org.xhtmlrenderer.render.FSFont, java.lang.String)
      */
-    public float[] getKernings(FontContext fontContext, FSFont fsFont, String substring) {
+    public float[] getKernings(FontContext fontContext, FSFont fsFont, String substring, IdentValue fsKerning) {
         // TODO Auto-generated method stub
         return null;
     }
@@ -342,7 +333,7 @@ public class Java2DTextRenderer implements TextRenderer {
     /* (non-Javadoc)
      * @see org.xhtmlrenderer.extend.TextRenderer#getFirstCharOffset(org.xhtmlrenderer.extend.FontContext, org.xhtmlrenderer.render.FSFont, java.lang.String)
      */
-    public float getFirstCharOffset(FontContext fontContext, FSFont fsFont, String substring) {
+    public float getFirstCharOffset(FontContext fontContext, FSFont fsFont, String substring, IdentValue fsKerning) {
         // TODO Auto-generated method stub
         return 0;
     }

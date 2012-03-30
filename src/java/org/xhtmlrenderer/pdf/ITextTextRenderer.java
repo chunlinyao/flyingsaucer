@@ -19,19 +19,15 @@
  */
 package org.xhtmlrenderer.pdf;
 
-import java.awt.Rectangle;
+import java.awt.*;
 import java.util.*;
 
-import org.xhtmlrenderer.extend.FSGlyphVector;
-import org.xhtmlrenderer.extend.FontContext;
-import org.xhtmlrenderer.extend.OutputDevice;
-import org.xhtmlrenderer.extend.TextRenderer;
+import org.xhtmlrenderer.css.constants.*;
+import org.xhtmlrenderer.extend.*;
 import org.xhtmlrenderer.pdf.ITextFontResolver.FontDescription;
-import org.xhtmlrenderer.render.FSFont;
-import org.xhtmlrenderer.render.FSFontMetrics;
-import org.xhtmlrenderer.render.JustificationInfo;
+import org.xhtmlrenderer.render.*;
 
-import com.lowagie.text.pdf.BaseFont;
+import com.lowagie.text.pdf.*;
 
 public class ITextTextRenderer implements TextRenderer {
     private static float TEXT_MEASURING_DELTA = 0.01f;
@@ -120,26 +116,9 @@ public class ITextTextRenderer implements TextRenderer {
      * org.xhtmlrenderer.extend.TextRenderer#getKernings(org.xhtmlrenderer.extend
      * .FontContext, org.xhtmlrenderer.render.FSFont, java.lang.String)
      */
-    public float[] getKernings(FontContext fontContext, FSFont fsFont, String substring) {
-        float[] kernings = new float[substring.length() + 1];
-        Arrays.fill(kernings, 0f);
-        for (int i = 0; i < substring.length() - 1; i++) {
-            if (substring.charAt(i) == '：') {
-                if (substring.charAt(i+1) == '“') {
-                    kernings[i] = -60f;
-                }
-            }
-            if (substring.charAt(i) == '。') {
-                if (substring.charAt(i+1) == '”') {
-                    kernings[i] = -60f;
-                }
-            }
-        }
-        char lastchar = substring.charAt(substring.length() - 1);
-        if ("”）』】》’".indexOf(lastchar) >= 0) {
-            kernings[substring.length() - 1] = -60f;
-        }
-        return kernings;
+    public float[] getKernings(FontContext fontContext, FSFont fsFont, String substring, IdentValue fsKerning) {
+        final KerningProvider provider = ITextKerningProviders.getProvider(fontContext, fsFont, fsKerning);
+        return provider.getKernings(substring);
     }
 
     /*
@@ -149,13 +128,9 @@ public class ITextTextRenderer implements TextRenderer {
      * org.xhtmlrenderer.extend.TextRenderer#getFirstCharOffset(org.xhtmlrenderer
      * .extend.FontContext, org.xhtmlrenderer.render.FSFont, java.lang.String)
      */
-    public float getFirstCharOffset(FontContext fontContext, FSFont fsFont, String substring) {
-        int firstChar = substring.codePointAt(0);
-        if ("“（『【‘《".indexOf(firstChar) < 0) {
-            return 0;
-        } else {
-            return -100f;
-        }
+    public float getFirstCharOffset(FontContext fontContext, FSFont fsFont, String substring, IdentValue fsKerning) {
+        final KerningProvider provider = ITextKerningProviders.getProvider(fontContext, fsFont, fsKerning);
+        return provider.getFirstCharOffset(substring);
     }
 
 }

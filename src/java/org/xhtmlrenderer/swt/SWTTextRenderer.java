@@ -21,13 +21,14 @@ package org.xhtmlrenderer.swt;
 
 import java.awt.Rectangle;
 
-import org.eclipse.swt.SWT;
+import org.eclipse.swt.*;
+import org.eclipse.swt.graphics.*;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontMetrics;
-import org.eclipse.swt.graphics.GC;
+import org.xhtmlrenderer.css.constants.*;
 import org.xhtmlrenderer.extend.*;
 import org.xhtmlrenderer.render.*;
-import org.xhtmlrenderer.util.Configuration;
+import org.xhtmlrenderer.util.*;
 
 /**
  * Render text with SWT.
@@ -123,7 +124,7 @@ public class SWTTextRenderer implements TextRenderer {
     /* (non-Javadoc)
      * @see org.xhtmlrenderer.extend.TextRenderer#getKernings(org.xhtmlrenderer.extend.FontContext, org.xhtmlrenderer.render.FSFont, java.lang.String)
      */
-    public float[] getKernings(FontContext fontContext, FSFont fsFont, String substring) {
+    public float[] getKernings(FontContext fontContext, FSFont fsFont, String substring, IdentValue fsKerning) {
         // TODO Auto-generated method stub
         return null;
     }
@@ -131,7 +132,7 @@ public class SWTTextRenderer implements TextRenderer {
     /* (non-Javadoc)
      * @see org.xhtmlrenderer.extend.TextRenderer#getFirstCharOffset(org.xhtmlrenderer.extend.FontContext, org.xhtmlrenderer.render.FSFont, java.lang.String)
      */
-    public float getFirstCharOffset(FontContext fontContext, FSFont fsFont, String substring) {
+    public float getFirstCharOffset(FontContext fontContext, FSFont fsFont, String substring, IdentValue fsKerning) {
         // TODO Auto-generated method stub
         return 0;
     }

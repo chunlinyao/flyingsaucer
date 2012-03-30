@@ -20,11 +20,10 @@
  */
 package org.xhtmlrenderer.extend;
 
-import java.awt.Rectangle;
+import java.awt.*;
 
-import org.xhtmlrenderer.render.FSFont;
-import org.xhtmlrenderer.render.FSFontMetrics;
-import org.xhtmlrenderer.render.JustificationInfo;
+import org.xhtmlrenderer.css.constants.*;
+import org.xhtmlrenderer.render.*;
 
 public interface TextRenderer {
     public void setup(FontContext context);
@@ -72,16 +71,18 @@ public interface TextRenderer {
      * @param fontContext
      * @param fsFont
      * @param substring
+     * @param fsKerning TODO
      * @return
      */
-    public float[] getKernings(FontContext fontContext, FSFont fsFont, String substring);
+    public float[] getKernings(FontContext fontContext, FSFont fsFont, String substring, IdentValue fsKerning);
     
     /**
      * @param fontContext
      * @param fsFont
      * @param substring
+     * @param fsKerning TODO
      * @return
      */
-    public float getFirstCharOffset(FontContext fontContext, FSFont fsFont, String substring);
+    public float getFirstCharOffset(FontContext fontContext, FSFont fsFont, String substring, IdentValue fsKerning);
 }
 

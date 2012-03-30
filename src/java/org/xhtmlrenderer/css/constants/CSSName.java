@@ -939,7 +939,15 @@ public final class CSSName implements Comparable {
                     new PrimitivePropertyBuilders.TextAlign()
             );
 
-
+    public final static CSSName FS_KERNING =
+            addProperty(
+                    "-fs-kerning",
+                    PRIMITIVE,
+                    "none",
+                    INHERITS,
+                    new PrimitivePropertyBuilders.Kerning()
+            );
+    
     /**
      * Unique CSSName instance for CSS2 property.
      */

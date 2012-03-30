@@ -23,7 +23,7 @@ package org.xhtmlrenderer.layout;
 import java.text.*;
 import java.util.*;
 
-import org.xhtmlrenderer.css.constants.IdentValue;
+import org.xhtmlrenderer.css.constants.*;
 import org.xhtmlrenderer.css.style.CalculatedStyle;
 import org.xhtmlrenderer.render.FSFont;
 import org.xhtmlrenderer.util.*;
@@ -79,13 +79,15 @@ public class Breaker {
             context.setEnd(context.getLast());
             int width = c.getTextRenderer().getWidth(c.getFontContext(), font,
                     context.getCalculatedSubstring());
-            final float[] kernings = c.getTextRenderer().getKernings(c.getFontContext(), font,
-                    context.getCalculatedSubstring());
-            context.setKernings(kernings);
-            context.setFirstCharOffset(c.getTextRenderer().getFirstCharOffset(c.getFontContext(), font,
-                    context.getCalculatedSubstring()));
-            width += context.getFirstCharOffset();
-            width += ArrayUtil.sum(kernings);
+            if (style.isKerning()) {
+                final float[] kernings = c.getTextRenderer().getKernings(c.getFontContext(), font,
+                        context.getCalculatedSubstring(), style.getIdent(CSSName.FS_KERNING));
+                context.setKernings(kernings);
+                context.setFirstCharOffset(c.getTextRenderer().getFirstCharOffset(c.getFontContext(), font,
+                        context.getCalculatedSubstring(), style.getIdent(CSSName.FS_KERNING)));
+                width += context.getFirstCharOffset();
+                width += ArrayUtil.sum(kernings);
+            }
             context.setWidth(width);
             return;
         }
@@ -98,13 +100,15 @@ public class Breaker {
                 context.setEnd(context.getStart() + n + 1);
                 int width = c.getTextRenderer().getWidth(c.getFontContext(), font,
                         context.getCalculatedSubstring());
-                final float[] kernings = c.getTextRenderer().getKernings(c.getFontContext(), font,
-                        context.getCalculatedSubstring());
-                context.setKernings(kernings);
-                context.setFirstCharOffset(c.getTextRenderer().getFirstCharOffset(c.getFontContext(), font,
-                        context.getCalculatedSubstring()));
-                width += context.getFirstCharOffset();
-                width += ArrayUtil.sum(kernings);
+                if (style.isKerning()) {
+                    final float[] kernings = c.getTextRenderer().getKernings(c.getFontContext(), font,
+                            context.getCalculatedSubstring(), style.getIdent(CSSName.FS_KERNING));
+                    context.setKernings(kernings);
+                    context.setFirstCharOffset(c.getTextRenderer().getFirstCharOffset(c.getFontContext(), font,
+                            context.getCalculatedSubstring(), style.getIdent(CSSName.FS_KERNING)));
+                    width += context.getFirstCharOffset();
+                    width += ArrayUtil.sum(kernings);
+                }
                 context.setWidth(width);
                 context.setNeedsNewLine(true);
                 context.setEndsOnNL(true);
@@ -112,13 +116,15 @@ public class Breaker {
                 context.setEnd(context.getLast());
                 int width = c.getTextRenderer().getWidth(c.getFontContext(), font,
                         context.getCalculatedSubstring());
-                final float[] kernings = c.getTextRenderer().getKernings(c.getFontContext(), font,
-                        context.getCalculatedSubstring());
-                context.setKernings(kernings);
-                context.setFirstCharOffset(c.getTextRenderer().getFirstCharOffset(c.getFontContext(), font,
-                        context.getCalculatedSubstring()));
-                width += context.getFirstCharOffset();
-                width += ArrayUtil.sum(kernings);
+                if (style.isKerning()) {
+                    final float[] kernings = c.getTextRenderer().getKernings(c.getFontContext(), font,
+                            context.getCalculatedSubstring(), style.getIdent(CSSName.FS_KERNING));
+                    context.setKernings(kernings);
+                    context.setFirstCharOffset(c.getTextRenderer().getFirstCharOffset(c.getFontContext(), font,
+                            context.getCalculatedSubstring(), style.getIdent(CSSName.FS_KERNING)));
+                    width += context.getFirstCharOffset();
+                    width += ArrayUtil.sum(kernings);
+                }
                 context.setWidth(width);
             }
         }
@@ -146,16 +152,21 @@ public class Breaker {
         int graphicsLength = 0;
         int lastGraphicsLength = 0;
         float[] kernings = null;
-        float firstCharOffset = c.getTextRenderer().getFirstCharOffset(c.getFontContext(), font,
-                currentString);
+        float firstCharOffset = 0;
+        if (style.isKerning()) {
+            firstCharOffset = c.getTextRenderer().getFirstCharOffset(c.getFontContext(), font,
+                currentString, style.getIdent(CSSName.FS_KERNING));
+        }
         while (right > 0 && graphicsLength <= avail) {
             lastGraphicsLength = graphicsLength;
             graphicsLength = c.getTextRenderer().getWidth(c.getFontContext(), font,
                     currentString.substring(first, right));
-            kernings = c.getTextRenderer().getKernings(c.getFontContext(), font,
-                    currentString.substring(first, right));
-            graphicsLength += firstCharOffset;
-            graphicsLength += ArrayUtil.sum(kernings);
+            if (style.isKerning()) {
+                kernings = c.getTextRenderer().getKernings(c.getFontContext(), font,
+                        currentString.substring(first, right), style.getIdent(CSSName.FS_KERNING));
+                graphicsLength += firstCharOffset;
+                graphicsLength += ArrayUtil.sum(kernings);
+            }
             lastWrap = left;
             left = right;
             if (tryToBreakAnywhere) {
@@ -171,10 +182,12 @@ public class Breaker {
             lastGraphicsLength = graphicsLength;
             graphicsLength = c.getTextRenderer().getWidth(c.getFontContext(), font,
                     currentString.substring(first));
-            kernings = c.getTextRenderer().getKernings(c.getFontContext(), font,
-                    currentString.substring(first));
-            graphicsLength += firstCharOffset;
-            graphicsLength += ArrayUtil.sum(kernings);
+            if (style.isKerning()) {
+                kernings = c.getTextRenderer().getKernings(c.getFontContext(), font,
+                        currentString.substring(first), style.getIdent(CSSName.FS_KERNING));
+                graphicsLength += firstCharOffset;
+                graphicsLength += ArrayUtil.sum(kernings);
+            }
         }
 
         if (graphicsLength <= avail) {
@@ -210,10 +223,12 @@ public class Breaker {
             if (left == currentString.length()) {
                 int width = c.getTextRenderer().getWidth(c.getFontContext(), font,
                         context.getCalculatedSubstring());
-                kernings = c.getTextRenderer().getKernings(c.getFontContext(), font,
-                        context.getCalculatedSubstring());
-                width += firstCharOffset;
-                width += ArrayUtil.sum(kernings);
+                if (style.isKerning()) {
+                    kernings = c.getTextRenderer().getKernings(c.getFontContext(), font,
+                            context.getCalculatedSubstring(), style.getIdent(CSSName.FS_KERNING));
+                    width += firstCharOffset;
+                    width += ArrayUtil.sum(kernings);
+                }
                 context.setWidth(width);
                 context.setKernings(kernings);
                 context.setFirstCharOffset(firstCharOffset);

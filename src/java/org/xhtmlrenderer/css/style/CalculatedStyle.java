@@ -1232,6 +1232,9 @@ public class CalculatedStyle {
         return isIdent(CSSName.FS_KEEP_WITH_INLINE, IdentValue.KEEP);
     }
 
+    public boolean isKerning() {
+        return !isIdent(CSSName.FS_KERNING, IdentValue.NONE);
+    }
 }// end class
 
 /*

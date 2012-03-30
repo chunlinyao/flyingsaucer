@@ -214,6 +214,8 @@ public class IdentValue implements FSDerivedValue {
     public final static IdentValue X_SMALL = addValue("x-small");
     public final static IdentValue XX_LARGE = addValue("xx-large");
     public final static IdentValue XX_SMALL = addValue("xx-small");
+    public final static IdentValue CJK = addValue("cjk");
+    public final static IdentValue CJK_DANGLE = addValue("cjk-dangle");
 
     /**
      * Description of the Field

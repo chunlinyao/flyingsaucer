@@ -23,6 +23,7 @@ package org.xhtmlrenderer.render;
 import java.awt.Rectangle;
 
 import org.w3c.dom.Text;
+import org.xhtmlrenderer.css.constants.*;
 import org.xhtmlrenderer.extend.FSGlyphVector;
 import org.xhtmlrenderer.layout.FunctionData;
 import org.xhtmlrenderer.layout.LayoutContext;
@@ -109,11 +110,13 @@ public class InlineText {
             int width = c.getTextRenderer().getWidth(c.getFontContext(), 
                     getParent().getStyle().getFSFont(c),
                     getSubstring());
-            width += firstCharOffset;
-            kernings = c.getTextRenderer().getKernings(c.getFontContext(), 
-                    getParent().getStyle().getFSFont(c),
-                    getSubstring());
-            width += ArrayUtil.sum(kernings);
+            if (getParent().getStyle().isKerning()) {
+                width += firstCharOffset;
+                kernings = c.getTextRenderer().getKernings(c.getFontContext(), 
+                        getParent().getStyle().getFSFont(c),
+                        getSubstring(), getParent().getStyle().getIdent(CSSName.FS_KERNING));
+                width += ArrayUtil.sum(kernings);
+            }
             setWidth(width);
             setTrimmedTrailingSpace(true);
         } 

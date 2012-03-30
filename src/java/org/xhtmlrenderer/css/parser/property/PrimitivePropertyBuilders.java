@@ -1363,6 +1363,19 @@ public class PrimitivePropertyBuilders {
         }
     }
 
+    public static class Kerning extends SingleIdent {
+        // none | default | cjk | cjk-dangle | inherit
+        private static final BitSet ALLOWED = setFor(
+                new IdentValue[] {
+                        IdentValue.DEFAULT, IdentValue.CJK,
+                        IdentValue.CJK_DANGLE, IdentValue.NONE,
+                        IdentValue.INHERIT});
+
+        protected BitSet getAllowed() {
+            return ALLOWED;
+        }
+    }
+    
     public static class TextDecoration extends AbstractPropertyBuilder {
         // none | [ underline || overline || line-through || blink ] | inherit
         private static final BitSet ALLOWED = setFor(
